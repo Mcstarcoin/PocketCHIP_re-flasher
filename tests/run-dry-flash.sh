@@ -23,7 +23,8 @@ for f in sunxi-spl.bin u-boot-dtb.bin uboot-400000.bin uboot-40000.bin spl-40000
   head -c 20000 /dev/urandom > "$T/src/stable-pocketchip-b126/$f"
 done
 head -c 3000000 /dev/urandom > "$T/src/stable-pocketchip-b126/chip-400000-4000-680.ubi.sparse"
-(cd "$T/src" && zip -qr "$T/stable-pocketchip-b126.zip" .)
+if command -v zip >/dev/null; then (cd "$T/src" && zip -qr "$T/stable-pocketchip-b126.zip" .)
+else (cd "$T/src" && python3 -m zipfile -c "$T/stable-pocketchip-b126.zip" stable-pocketchip-b126); fi
 
 # 2. Fake archive.org metadata with the right size + md5
 MD5=$(md5sum "$T/stable-pocketchip-b126.zip" | cut -d' ' -f1)
@@ -48,7 +49,7 @@ cat > "$T/run.sh" <<EOF
 export PATH="$HERE/fake:\$PATH"
 source "$T/lib.sh"
 WORK_DIR="$T/work"; IMG_DIR="\$WORK_DIR/images"; TOOLS_DIR="\$WORK_DIR/CHIP-tools-2025"; LOG_DIR="\$WORK_DIR/logs"
-IA_META="$T/files.xml"; IA_BASE="file://$T"
+IA_META="$T/files.xml"; IA_BASE="file://$T"; GH_BASE="file://$T/no-such-release"
 HAVE_WHIPTAIL=0
 setup_permissions() { ok "(setup_permissions skipped in test)"; }
 do_flash <<< \$'y\n\n'

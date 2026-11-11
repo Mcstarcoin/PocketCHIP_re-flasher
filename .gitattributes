@@ -1,0 +1,7 @@
+# Linux scripts must keep LF; Windows scripts get CRLF on checkout.
+*.sh    text eol=lf
+tests/fake/*  text eol=lf
+*.ps1   text eol=crlf
+*.cmd   text eol=crlf
+*.cfg   text eol=crlf
+*.cmds  text eol=lf

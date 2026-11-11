@@ -15,6 +15,7 @@
 #     (official Next Thing Co. builds), are MD5-verified, cached, and handed to
 #     chip-update-firmware.sh with -L (local images). The old mirror is still
 #     tried as a fallback in case it comes back.
+#   - Images are also mirrored on this repo's GitHub "images" release (tried first).
 #   - Only installs packages that are actually missing; skips apt otherwise.
 #   - Progress bar pinned to the bottom of the terminal for every long step.
 #   - CHIP ASCII art, live USB status in the menu.
@@ -30,6 +31,8 @@ TOOLS_REPO="https://github.com/Elfking29/CHIP-tools-2025.git"
 SUNXI_REPO="https://github.com/linux-sunxi/sunxi-tools.git"
 SUNXI_FALLBACK_TAG="v1.4.1"   # version the Flash-CHIP-2025 README recommends
 
+# Copies of the official Next Thing Co. images, attached to this repo's "images" release
+GH_BASE="${PCF_GH_BASE:-https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/download/images}"
 IA_BASE="https://archive.org/download/C.h.i.p.FlashCollection"
 IA_META_URL="$IA_BASE/C.h.i.p.FlashCollection_files.xml"
 MIRROR_URL="http://chip.jfpossibilities.com/chip/images"   # offline as of 2026-11
@@ -253,7 +256,8 @@ ia_build() {
 
 source_name() {
   case $OPT_SOURCE in
-    auto)    echo "Auto (Internet Archive, then old mirror)";;
+    auto)    echo "Auto (GitHub copy, Internet Archive, old mirror)";;
+    github)  echo "GitHub release copy only";;
     archive) echo "Internet Archive only";;
     mirror)  echo "jfpossibilities mirror only";;
     local)   echo "Local: ${OPT_LOCAL_PATH:-<not set>}";;
@@ -477,17 +481,21 @@ check_space() {   # check_space <bytes_needed>
   fi
 }
 
-fetch_from_archive() {   # fetch_from_archive <name> <dir>
+fetch_from_archive() {   # fetch_from_archive <name> <dir> [base_url] [label]
   local name=$1 dir=$2 zipname="$1.zip" zip="$IMG_DIR/$1.zip"
-  info "Source: Internet Archive - C.H.I.P. Flash Collection ($zipname)"
+  local base=${3:-$IA_BASE} srclabel=${4:-"Internet Archive - C.H.I.P. Flash Collection"}
+  info "Source: $srclabel ($zipname)"
+  if [[ ! -f $zip && ! -f $zip.part ]] && ! curl -sfIL --connect-timeout 15 -m 30 -o /dev/null "$base/$zipname"; then
+    warn "$zipname is not available there."; return 1
+  fi
   run_busy "Reading archive file list" ia_meta || warn "Could not read archive.org file list; skipping checksum."
   local size md5; size=$(ia_field "$zipname" size); md5=$(ia_field "$zipname" md5)
-  [[ $size =~ ^[0-9]+$ ]] || size=$(curl -sIL --connect-timeout 15 "$IA_BASE/$zipname" | awk 'tolower($1)=="content-length:"{v=$2} END{gsub("\r","",v); print v+0}')
+  [[ $size =~ ^[0-9]+$ ]] || size=$(curl -sIL --connect-timeout 15 "$base/$zipname" | awk 'tolower($1)=="content-length:"{v=$2} END{gsub("\r","",v); print v+0}')
   if [[ ! -f $zip ]]; then
     check_space $(( size > 0 ? size * 3 + 300000000 : 3500000000 )) || return 1
-    info "Downloading $(mb "$size") MB. archive.org can be slow - this may take a while."
+    info "Downloading $(mb "$size") MB. This may take a while."
     info "If it gets interrupted, just run Flash again: it resumes where it stopped."
-    download_file "$IA_BASE/$zipname" "$zip" "Downloading image" "$size" || { err "Download from archive.org failed."; return 1; }
+    download_file "$base/$zipname" "$zip" "Downloading image" "$size" || { err "Download from $srclabel failed."; return 1; }
   else
     ok "Found downloaded $zipname"
   fi
@@ -564,6 +572,11 @@ prepare_image() {
     if image_complete "$dir"; then
       ok "Image $name already downloaded - skipping download."
       IMG_LOCALDIR="../images/$name"; return 0
+    fi
+    if [[ $OPT_SOURCE == auto || $OPT_SOURCE == github ]]; then
+      if fetch_from_archive "$name" "$dir" "$GH_BASE" "GitHub release (copy of the Next Thing Co. image)"; then IMG_LOCALDIR="../images/$name"; return 0; fi
+      [[ $OPT_SOURCE == github ]] && return 1
+      warn "GitHub copy not available; trying the Internet Archive."
     fi
     if fetch_from_archive "$name" "$dir"; then IMG_LOCALDIR="../images/$name"; return 0; fi
     [[ $OPT_SOURCE == archive ]] && return 1
@@ -718,6 +731,7 @@ image_fail_help() {
   echo "  Could not get the firmware image. Options:"
   echo "   1. Run Flash again - downloads resume where they stopped."
   echo "   2. Download it in your browser instead:"
+  echo "        $GH_BASE/$OPT_BRANCH-$(flavor_dir)-b$(ia_build).zip   (GitHub copy)"
   echo "        $IA_BASE/$OPT_BRANCH-$(flavor_dir)-b$(ia_build).zip"
   echo "      then pick Advanced > Image source > Local and point to the .zip."
 }
@@ -778,7 +792,8 @@ advanced_menu() {
             Toshiba_512M_SLC "Toshiba 512MB SLC (CHIP Pro)") && \
             { [[ $n == auto ]] && OPT_NAND="" || OPT_NAND=$n; } ;;
       4) local s; s=$(menu "Where to get the firmware image" \
-            auto "Auto: Internet Archive, fall back to old mirror" \
+            auto "Auto: GitHub copy, then Internet Archive, then old mirror" \
+            github "GitHub release copy only (this repo)" \
             archive "Internet Archive only" \
             mirror "jfpossibilities mirror only (offline as of Nov 2026)" \
             local "A .zip or folder I already downloaded") || continue
