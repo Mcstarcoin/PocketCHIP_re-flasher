@@ -11,6 +11,17 @@ Works on **Linux Mint / Ubuntu** and **Windows 10/11**.
 > The Next Thing Co. name and logo belong to their owners and are shown only to
 > identify the hardware this tool is for.
 
+<p align="center">
+  <img src="docs/images/pocketchip.png" alt="PocketCHIP showing the Pocket OS home screen" width="420">
+  <img src="docs/images/chip-board.png" alt="C.H.I.P. single-board computer" width="420">
+</p>
+<p align="center"><sub>
+  PocketCHIP and C.H.I.P. photos by <a href="https://www.flickr.com/people/120586634@N05">Gareth Halfacree</a>,
+  <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>, via
+  <a href="https://commons.wikimedia.org/wiki/File:Next_Thing_CHIP_and_PocketCHIP_(29074994303).png">Wikimedia Commons</a>
+  (<a href="https://commons.wikimedia.org/wiki/File:Next_Thing_CHIP_and_PocketCHIP_(29073142254).png">2</a>). Resized.
+</sub></p>
+
 Next Thing Co. shut down in 2018 and its download servers are gone. This tool
 gets the official images from a copy in this repo's
 [GitHub release](https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/tag/images)
