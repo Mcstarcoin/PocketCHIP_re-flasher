@@ -1,7 +1,15 @@
+<p align="center">
+  <img src="https://avatars.githubusercontent.com/u/47195960?v=4&s=240" alt="Next Thing Co. logo" width="160">
+</p>
+
 # PocketCHIP Flasher
 
 One-shot, menu-driven re-flasher for the Next Thing Co. **PocketCHIP / C.H.I.P.**
 Works on **Linux Mint / Ubuntu** and **Windows 10/11**.
+
+> Unofficial community tool. Not affiliated with or endorsed by Next Thing Co.
+> The Next Thing Co. name and logo belong to their owners and are shown only to
+> identify the hardware this tool is for.
 
 Next Thing Co. shut down in 2018 and its download servers are gone. This tool
 gets the official images from a copy in this repo's
