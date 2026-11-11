@@ -1,0 +1,5 @@
+#!/bin/bash
+[[ $1 == devices ]] && { echo "x fastboot"; exit 0; }
+[[ $1 == -i ]] && { echo "x"; exit 0; }
+if [[ $1 == flash ]]; then for i in 1 2 3; do echo "Sending sparse 'UBI' $i/3 (262140 KB) OKAY"; sleep 0.3; echo "Writing sparse 'UBI' $i/3 OKAY"; done; fi
+exit 0

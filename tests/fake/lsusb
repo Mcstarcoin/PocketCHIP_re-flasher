@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "Bus 001 Device 005: ID 1f3a:efe8 Onda (unverified) V972 tablet in flashing mode"

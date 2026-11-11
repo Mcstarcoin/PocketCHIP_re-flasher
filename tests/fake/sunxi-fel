@@ -1,0 +1,3 @@
+#!/bin/bash
+case $1 in read) printf 'nand_erasesize=400000\nnand_writesize=4000\nnand_oobsize=680\n' > "$4";; esac
+exit 0
