@@ -4,12 +4,13 @@
 
 # PocketCHIP Flasher
 
-One-shot, menu-driven re-flasher for the Next Thing Co. **PocketCHIP / C.H.I.P.**
+This is a One-shot, menu-driven re-flasher for the Next Thing Co. **PocketCHIP / C.H.I.P.**
 Works on **Linux Mint / Ubuntu** and **Windows 10/11**.
 
-> Unofficial community tool. Not affiliated with or endorsed by Next Thing Co.
-> The Next Thing Co. name and logo belong to their owners and are shown only to
-> identify the hardware this tool is for.
+It wraps the community [CHIP-tools-2025](https://github.com/Elfking29/CHIP-tools-2025) scripts that were kindly put together by Elfking29 under /CHIP-tools-2025.
+another great source that I didn't find till afterwards is [awesome-pocketchip](https://github.com/arran4/awesome-pocketchip) created by arran4 under /awesome-pocket chip that have a whole bunch of other sources in case you're intrested.
+
+Next Thing Co. shut down in 2018 and its download servers are gone which broke several other tools. **I built this software to make the Re-flashing process a breeze.** It gets the official images from a copy in this repo's [GitHub release](https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/tag/images) or from the Internet Archive, checks them for validity, and then flashes them over USB.
 
 <p align="center">
   <img src="docs/images/pocketchip.png" alt="PocketCHIP showing the Pocket OS home screen" width="420">
@@ -22,20 +23,21 @@ Works on **Linux Mint / Ubuntu** and **Windows 10/11**.
   (<a href="https://commons.wikimedia.org/wiki/File:Next_Thing_CHIP_and_PocketCHIP_(29073142254).png">2</a>). Resized.
 </sub></p>
 
-Next Thing Co. shut down in 2018 and its download servers are gone. This tool
-gets the official images from a copy in this repo's
-[GitHub release](https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/tag/images)
-or from the Internet Archive, checks them, and flashes them over USB.
 
-## Linux (Mint / Ubuntu / Debian)
+> This is Unofficial community tool. Not affiliated with or endorsed by Next Thing Co.
+> The Next Thing Co. name and logo belong to their owners and are shown only to
+> identify the hardware this tool.
+
+
+## How to run after install on Linux (Mint / Ubuntu / Debian)
+Linux is the environment the tool was mostly designed for, and you might need a .venv setup if you have any issues getting a package to install in some rare cases.
 
 ```bash
 chmod +x pocketchip-flasher.sh
 ./pocketchip-flasher.sh
 ```
 
-Run it as your normal user. It asks for sudo when it needs it.
-It wraps the community [CHIP-tools-2025](https://github.com/Elfking29/CHIP-tools-2025) scripts.
+Run it as your normal user, and the tool only asks for sudo when needed.
 
 ## Windows 10 / 11
 
@@ -44,25 +46,35 @@ It wraps the community [CHIP-tools-2025](https://github.com/Elfking29/CHIP-tools
 3. First time only: choose **6 (Setup)**. It does three things:
    - downloads `fastboot.exe` (Google Android Platform-Tools)
    - builds `sunxi-fel.exe` from the official linux-sunxi source. There's no
-     official Windows build, so it downloads a portable compiler (~190 MB,
-     nothing gets installed) and takes a few minutes.
+     official Windows build, so it downloads a portable compiler (~190 MB, nothing gets installed) and takes a few minutes.
    - opens **Zadig** to install the WinUSB driver. In Zadig, do this twice:
      *Device > Load Preset Device*, pick `chip-fel.cfg`, then `chip-fastboot.cfg`,
-     and click **Install Driver** (WinUSB) each time. The CHIP doesn't need to be plugged in.
-4. Put the CHIP in FEL mode (menu **1** explains how), plug it in, choose **2 (FLASH NOW)**.
+     and click **Install Driver** (WinUSB) each time. The CHIP doesn't need to be plugged in for this step.
+1. Put the CHIP in FEL mode (menu **1** explains how), plug it in, choose **2 (FLASH NOW)** to start the process.
 
-The Windows version runs natively. It doesn't need WSL or Linux. It does the same
-FEL and fastboot steps as CHIP-tools-2025, ported to PowerShell. The menus,
-the bottom progress bar and the image caching work the same as on Linux.
-Everything it downloads is kept in `%LOCALAPPDATA%\pocketchip-flasher`.
+The Windows version runs natively and does the same FEL and fastboot steps as CHIP-tools-2025, 
+they were just ported to ported to PowerShell, I firmly believe in easy to use software made free.
 
-Command line (no menu):
+The menus, the bottom progress bar and the image caching work the same as on Linux too.
+Everything it downloads is kept in `%LOCALAPPDATA%\pocketchip-flasher` in case you need to go looking for it.
+
+### Running it Command line Only (no menu):
+
+Just in case you're a headless junky i've gone ahead (pun intended) and included a powershell only option.
+This should also be useful if there's ever any issues with the Ui but let's hope that doesn't happen. 🤞 
 
 ```bash
 powershell -ExecutionPolicy Bypass -File windows\pocketchip-flasher.ps1 -Flash -Yes -Flavor p
 ```
 
-Options: `-Flavor p|s|g|b`, `-Branch stable|testing`, `-Nand Hynix_8G_MLC|Toshiba_4G_MLC|Toshiba_512M_SLC`,
+ , , `-Nand Hynix_8G_MLC|Toshiba_4G_MLC|Toshiba_512M_SLC`,
+
+| The Options are:                                       | Note |
+| ------------------------------------------------------ | ---- |
+| `-Flavor p\|s\|g\|b`                                   |      |
+| `-Branch stable\|testing`                              |      |
+| `-Nand Hynix_8G_MLC\|Toshiba_4G_MLC\|Toshiba_512M_SLC` |      |
+
 `-Source auto|github|archive|mirror|local`, `-LocalImage <zip or folder>`, `-NoLimit`, `-Reset`, `-DownloadOnly`.
 
 ## The Next Thing Co. firmware image
@@ -80,11 +92,14 @@ Next Thing Co. published:
 | Download (GitHub copy) | [releases/download/images/stable-pocketchip-b126.zip](https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/download/images/stable-pocketchip-b126.zip) |
 | Download (Internet Archive) | [archive.org/download/C.h.i.p.FlashCollection/stable-pocketchip-b126.zip](https://archive.org/download/C.h.i.p.FlashCollection/stable-pocketchip-b126.zip) |
 
-The zip holds the files for every NAND type. The flasher detects the NAND chip and picks the matching files.
+The flasher detects the NAND chip and picks the matching files.
 
-Other official builds are in the Internet Archive's
-[C.H.I.P. Flash Collection](https://archive.org/details/C.h.i.p.FlashCollection).
-Choose them under **Advanced > Flavour / Branch**:
+The zip holds the files for every NAND type as a backup. 
+
+Other official builds are in the Internet Archive's [C.H.I.P. Flash Collection](https://archive.org/details/C.h.i.p.FlashCollection).
+
+Choose them under **Advanced > Flavour / Branch**: 
+^(YEA I know this is spelled weird, just wanted to leave it the way it was under Elfking29's build)
 
 | Flavor | Stable | Testing |
 |---|---|---|
@@ -99,7 +114,7 @@ GitHub release, then the Internet Archive, then the old jfpossibilities mirror
 file list. If you downloaded a zip yourself, use **Advanced > Image source > Local**.
 
 These images are Next Thing Co.'s original, unmodified builds, copied here so
-they're easier to find. Next Thing Co. no longer exists. The images contain
+they're easier to find since Next Thing Co. no longer exists. The images contain
 Debian and other open-source software under their own licenses.
 
 ## Testing without a CHIP
