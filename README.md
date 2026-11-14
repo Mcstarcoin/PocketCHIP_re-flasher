@@ -4,11 +4,11 @@
 
 # PocketCHIP Flasher
 
-This is a One-shot, menu-driven re-flasher for the Next Thing Co. **PocketCHIP / C.H.I.P.**
-Works on **Linux Mint / Ubuntu** and **Windows 10/11**.
+This is an easy to use, menu-driven re-flasher for the Next Thing Co. **PocketCHIP / C.H.I.P.**
+Works on **Linux Mint / Ubuntu / Debian** and **Windows 10/11**.
 
-It wraps the community [CHIP-tools-2025](https://github.com/Elfking29/CHIP-tools-2025) scripts that were kindly put together by Elfking29 under /CHIP-tools-2025.
-another great source that I didn't find till afterwards is [awesome-pocketchip](https://github.com/arran4/awesome-pocketchip) created by arran4 under /awesome-pocket chip that have a whole bunch of other sources in case you're intrested.
+This is a wrapper for the community [CHIP-tools-2025](https://github.com/Elfking29/CHIP-tools-2025) scripts that were kindly put together by Elfking29 under /CHIP-tools-2025.
+Another great source that I didn't find till afterwards is [awesome-pocketchip](https://github.com/arran4/awesome-pocketchip) created by arran4 under /awesome-pocket chip that have a whole bunch of other sources in case you're interested.
 
 Next Thing Co. shut down in 2018 and its download servers are gone which broke several other tools. **I built this software to make the Re-flashing process a breeze.** It gets the official images from a copy in this repo's [GitHub release](https://github.com/Mcstarcoin/PocketCHIP_re-flasher/releases/tag/images) or from the Internet Archive, checks them for validity, and then flashes them over USB.
 
@@ -37,26 +37,27 @@ chmod +x pocketchip-flasher.sh
 ./pocketchip-flasher.sh
 ```
 
-Run it as your normal user, and the tool only asks for sudo when needed.
+Run it as your normal user, the tool only asks for sudo when needed.
 
 ## Windows 10 / 11
 
-1. Download this repo (green **Code** button > **Download ZIP**, then unzip it), or `git clone` it.
-2. Open the `windows` folder and double-click **`PocketCHIP-Flasher.cmd`**.
-3. First time only: choose **6 (Setup)**. It does three things:
+A. Download this repo (**Download ZIP**, then unzip it), or `git clone` it.
+B. Open the `windows` folder and double-click **`PocketCHIP-Flasher.cmd`**.
+ 
+1. First time only: choose **6 (Setup)**. It does three things:
    - downloads `fastboot.exe` (Google Android Platform-Tools)
-   - builds `sunxi-fel.exe` from the official linux-sunxi source. There's no
-     official Windows build, so it downloads a portable compiler (~190 MB, nothing gets installed) and takes a few minutes.
+   - builds `sunxi-fel.exe` from the official linux-sunxi source and can't run without this. There's no
+     official windows build, so it downloads a portable compiler (~190 MB, nothing gets installed) and takes a few minutes.
    - opens **Zadig** to install the WinUSB driver. In Zadig, do this twice:
      *Device > Load Preset Device*, pick `chip-fel.cfg`, then `chip-fastboot.cfg`,
      and click **Install Driver** (WinUSB) each time. The CHIP doesn't need to be plugged in for this step.
-1. Put the CHIP in FEL mode (menu **1** explains how), plug it in, choose **2 (FLASH NOW)** to start the process.
+2. Put the CHIP in FEL mode by connecting the Fel pin to GND (menu **1** explains how), plug it in, then choose **2 (FLASH NOW)** to start the process.
 
 The Windows version runs natively and does the same FEL and fastboot steps as CHIP-tools-2025, 
-they were just ported to ported to PowerShell, I firmly believe in easy to use software made free.
+they were just ported to ported to PowerShell because I firmly believe in easy to use software made free.
 
 The menus, the bottom progress bar and the image caching work the same as on Linux too.
-Everything it downloads is kept in `%LOCALAPPDATA%\pocketchip-flasher` in case you need to go looking for it.
+Everything it downloads on windows is kept in `%LOCALAPPDATA%\pocketchip-flasher` in case you need to go looking for it.
 
 ### Running it Command line Only (no menu):
 
@@ -75,7 +76,7 @@ powershell -ExecutionPolicy Bypass -File windows\pocketchip-flasher.ps1 -Flash -
 | `-Branch stable\|testing`                              |      |
 | `-Nand Hynix_8G_MLC\|Toshiba_4G_MLC\|Toshiba_512M_SLC` |      |
 
-`-Source auto|github|archive|mirror|local`, `-LocalImage <zip or folder>`, `-NoLimit`, `-Reset`, `-DownloadOnly`.
+|`-Source auto|github|archive|mirror|local`|, `-LocalImage <zip or folder>`, `-NoLimit`, `-Reset`, `-DownloadOnly`.
 
 ## The Next Thing Co. firmware image
 
