@@ -365,7 +365,7 @@ function Ensure-SunxiFel {
     Warn 'sunxi-fel.exe (the FEL USB tool) is not built yet.'
     Write-Host '   There is no official Windows download, so it is compiled from the'
     Write-Host '   linux-sunxi source (v1.4.1). This downloads a portable compiler'
-    Write-Host '   (~190 MB, nothing is installed) and takes a few minutes, once.'
+    Write-Host '   (~190 MB) and takes a few minutes, once. 7-Zip is installed if missing.'
     if (-not (YesNo 'Build sunxi-fel.exe now?')) { return $false }
     Bar-Stop
     & (Join-Path $PSHOME 'powershell.exe') -NoProfile -ExecutionPolicy Bypass -File $builder -OutDir (Split-Path $exe)
