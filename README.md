@@ -47,7 +47,7 @@ B. Open the `windows` folder and double-click **`PocketCHIP-Flasher.cmd`**.
 1. First time only: choose **6 (Setup)**. It does three things:
    - downloads `fastboot.exe` (Google Android Platform-Tools)
    - builds `sunxi-fel.exe` from the official linux-sunxi source and can't run without this. There's no
-     official windows build, so it downloads a portable compiler (~190 MB, nothing gets installed) and takes a few minutes.
+     official windows build, so it downloads a portable compiler (~190 MB) and takes a few minutes. It also installs 7-Zip with winget if it's missing, because Windows' `tar.exe` can't unpack libusb's `.7z`.
    - opens **Zadig** to install the WinUSB driver. In Zadig, do this twice:
      *Device > Load Preset Device*, pick `chip-fel.cfg`, then `chip-fastboot.cfg`,
      and click **Install Driver** (WinUSB) each time. The CHIP doesn't need to be plugged in for this step.
